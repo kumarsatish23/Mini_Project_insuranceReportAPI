@@ -1,0 +1,13 @@
+spring :
+  datasource:
+    username: root
+    password: 8008
+    url: jdbc:mysql://localhost:3306/sbms?createDatabaseIfNotExist=true
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+     ddl-auto: update
+    show-sql: true 
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
