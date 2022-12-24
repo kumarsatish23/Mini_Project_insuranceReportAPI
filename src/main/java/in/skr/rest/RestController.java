@@ -5,7 +5,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import in.skr.binding.CitizenPlan;
 import in.skr.binding.SearchRequest;
@@ -16,36 +20,37 @@ public class RestController {
 	@Autowired
 	private ReportService reportService;
 	
-	@GetMapping("/pdf")
-    public void exportToPDF(HttpServletResponse response) throws Exception {
-        response.setContentType("application/pdf");
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=ReportApi.pdf";
-        response.setHeader(headerKey, headerValue);
-		reportService.exportPdf(response);
-         
-    }
-	@GetMapping("/excel")
-	public void generateExcelReport(HttpServletResponse response) throws Exception{
+	@GetMapping("/plannames")
+	public ResponseEntity<List<String>> getPlanNames(){
+		List<String> planNames=reportService.getPlanNames();
+		return new ResponseEntity<>(planNames,HttpStatus.OK);
+	}
+	@GetMapping("/planstatuses")
+	public ResponseEntity<List<String>> getPlanStatuses(){
+		List<String> PlanStatuses=reportService.getPlanStatuses();
+		return new ResponseEntity<>(PlanStatuses,HttpStatus.OK);
+	}
+	@PostMapping("/search")
+	public ResponseEntity<List<CitizenPlan>> search(@RequestBody SearchRequest request){
+		List<CitizenPlan> citizenPlans=reportService.getCitizenPlans(request);
+		return new ResponseEntity<>(citizenPlans,HttpStatus.OK);
+	}
+	@GetMapping("/export")
+	public void exportExcel(HttpServletResponse response) throws Exception {
 		response.setContentType("application/octet-stream");
-		String headerKey="Content-Disposition";
-		String headerValue="attachment;filename=ReportApi.xls";
-		
-		response.setHeader(headerKey, headerValue);
+		String key="Content-Disposition";
+		String value="attachment;filename=citizen.xls";
+		response.setHeader(key, value);
 		reportService.exportExcel(response);
-		
+		response.flushBuffer();
 	}
-
-	@GetMapping("/PlanNames")
-	public List<String> getPlanNames() {
-		return reportService.getPlanNames();
-	}
-	@GetMapping("/PlanStatus")
-	public List<String> getPlanStatuses() {
-		return reportService.getPlanStatuses();
-	}
-	@GetMapping("/PlanStatus/{request}")
-	public List<CitizenPlan> getCitizenPlans(SearchRequest request) {
-		return reportService.getCitizenPlans(request);
+	@GetMapping("/pdf")
+	public void exportPdf(HttpServletResponse response) throws Exception {
+		response.setContentType("application/pdf");
+		String key="Content-Disposition";
+		String value="attachment;filename=plans.pdf";
+		response.setHeader(key, value);
+		reportService.exportPdf(response);
+		response.flushBuffer();
 	}
 }

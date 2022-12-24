@@ -106,7 +106,7 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public void exportPdf(HttpServletResponse response) throws Exception{
 		
-		Document document = new Document(PageSize.A3);
+		Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
          
         document.open();
@@ -121,7 +121,7 @@ public class ReportServiceImpl implements ReportService {
 		
         PdfPTable table = new PdfPTable(8);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] {1.5f, 3.5f, 3.0f, 3.0f, 1.5f, 1.5f, 1.5f});
+        table.setWidths(new float[] {0.7f, 2.5f, 2f, 1.5f, 3f, 2f, 4f, 3f});
         table.setSpacingBefore(10);
         
         PdfPCell cell = new PdfPCell();
